@@ -9,6 +9,14 @@ public class GridTest : MonoBehaviour
     public Transform player;
     public Tilemap tilemap;
     public Vector3 originPosition;
+    public Transform SpawnPoint;
+    public GameObject enemy;
+    public GameObject waypoints;
+
+    public float reloadTime = 2f;
+    public float reloadProgress = 0f;
+
+
     Grid grid;
     void Start()
     {
@@ -23,7 +31,14 @@ public class GridTest : MonoBehaviour
             Vector3 vec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             grid.GetXY(vec, out int x, out int y);
             Debug.Log(x + ":" + y);
+        }
 
+        reloadProgress += Time.deltaTime;
+        if (reloadProgress >= reloadTime)
+        {
+            GameObject go = Instantiate<GameObject>(enemy);
+            go.GetComponent<EnemyMovement>().waypointsContainer = waypoints;
+            reloadProgress = 0;
         }
     }
 
