@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline;
 using UnityEngine;
 
 public class TurretController : MonoBehaviour
@@ -10,9 +11,11 @@ public class TurretController : MonoBehaviour
     public int cost;
     public int damage;
     private CircleCollider2D collider;
-
+    public GameObject turret;
+    public GameObject tower;
     public float fireRate = 2f;
     public float reloadProgress = 0f;
+    public int price = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +36,12 @@ public class TurretController : MonoBehaviour
 
     private void FollowTarget()
     {
-        transform.up = Vector3.RotateTowards(transform.up,target.transform.position,360, Time.deltaTime);
+        Vector3 dir = target.transform.position - turret.transform.position;
+        dir.Normalize();
+
+        float rot_z = Mathf.Atan2(dir.normalized.y, dir.normalized.x) * Mathf.Rad2Deg;
+        Vector3 rotation = Quaternion.Lerp(turret.transform.rotation, Quaternion.Euler(0f, 0f, rot_z - 90), Time.deltaTime * 5).eulerAngles;
+        turret.transform.rotation = Quaternion.Euler(0f, 0f, rotation.z);
     }
 
     private void FireTarget()
@@ -41,6 +49,8 @@ public class TurretController : MonoBehaviour
         reloadProgress += Time.deltaTime;
         if (reloadProgress >= fireRate)
         {
+            GameObject go = Instantiate(bullet);
+
             target.GetComponent<EnemyController>().GetDamage(damage);
             reloadProgress = 0;
         }

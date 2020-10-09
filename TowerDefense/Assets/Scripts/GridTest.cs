@@ -17,7 +17,7 @@ public class GridTest : MonoBehaviour
     public float reloadProgress = 0f;
 
 
-    Grid grid;
+    public Grid grid;
     void Start()
     {
         grid = new Grid(x, y, 1f, originPosition);
