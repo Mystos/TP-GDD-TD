@@ -8,7 +8,10 @@ public class EnemyMovement : MonoBehaviour
     public GameObject waypointsContainer;
     public List<GameObject> waypoints;
     public GameObject currentWaypoint;
+    public GameObject endPoint;
+    public GameObject gameManager;
     int indexWaypoints = 0;
+    public int moveSpeed = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -30,14 +33,15 @@ public class EnemyMovement : MonoBehaviour
         {
             if (!transform.position.Equals(currentWaypoint.transform.position))
             {
-                transform.position = Vector2.MoveTowards(transform.position, currentWaypoint.transform.position, Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, currentWaypoint.transform.position, Time.deltaTime + moveSpeed);
             }
             else
             {
                 GetNextWaypoint();
-                if (currentWaypoint == null)
+                if (currentWaypoint.name == "EndPoint" && transform.position.Equals(currentWaypoint.transform.position))
                 {
-                    Debug.Log("Bravo");
+                    gameManager.GetComponent<GridTest>().pdvChateau -= 1;
+                    GameObject.Destroy(this.gameObject);
                 }
             }
         }
@@ -52,7 +56,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
-            currentWaypoint = null;
+            currentWaypoint = endPoint;
         }
 
     }

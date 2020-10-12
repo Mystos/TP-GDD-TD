@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    public Transform target;
+    public GameObject target;
     public int damage = 0;
 
     // Start is called before the first frame update
@@ -16,9 +16,27 @@ public class BulletController : MonoBehaviour
 // Update is called once per frame
 void Update()
     {
-        if(transform.position != target.position)
+        if (target != null && transform.position != target.transform.position)
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, Time.deltaTime * 5);
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, Time.deltaTime * 5);
+        }
+        else
+        {
+            GameObject.Destroy(this.gameObject);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject == target)
+        {
+            if (target != null)
+            {
+                target.GetComponent<EnemyController>().GetDamage(damage);
+            }
+            GameObject.Destroy(this.gameObject);
+        }
+    }
+
+
 }

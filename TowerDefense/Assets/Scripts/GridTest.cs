@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GridTest : MonoBehaviour
 {
     public int x, y;
-    public Transform player;
+    public GameObject player;
     public Tilemap tilemap;
     public Vector3 originPosition;
     public Transform SpawnPoint;
+    public GameObject endPoint;
     public GameObject enemy;
     public GameObject waypoints;
+    public Text textGold;
+    public int pdvChateau = 1;
+
 
     public float reloadTime = 2f;
     public float reloadProgress = 0f;
@@ -37,9 +42,20 @@ public class GridTest : MonoBehaviour
         if (reloadProgress >= reloadTime)
         {
             GameObject go = Instantiate<GameObject>(enemy);
-            go.GetComponent<EnemyMovement>().waypointsContainer = waypoints;
+            EnemyMovement em = go.GetComponent<EnemyMovement>();
+            em.waypointsContainer = waypoints;
+            em.endPoint = endPoint;
+            em.gameManager = this.gameObject;
+
             reloadProgress = 0;
         }
+
+        if(pdvChateau <= 0)
+        {
+            Application.Quit();
+        }
+
+        textGold.text = "Gold : " + player.GetComponent<PlayerController>().gold;
     }
 
     public static Vector3 GetMouseWorldPosition()

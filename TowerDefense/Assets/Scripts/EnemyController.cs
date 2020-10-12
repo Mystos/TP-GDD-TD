@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     public int currentHealth = 100;
     public int lootGold = 0;
     public PlayerController player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,6 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         CheckDeath();
-
     }
 
     private void CheckDeath()

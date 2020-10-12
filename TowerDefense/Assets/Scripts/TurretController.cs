@@ -8,7 +8,6 @@ public class TurretController : MonoBehaviour
     public GameObject target;
     public GameObject bullet;
     public float radius;
-    public int cost;
     public int damage;
     private CircleCollider2D collider;
     public GameObject turret;
@@ -50,8 +49,10 @@ public class TurretController : MonoBehaviour
         if (reloadProgress >= fireRate)
         {
             GameObject go = Instantiate(bullet);
+            go.transform.position = this.transform.position;
+            go.GetComponent<BulletController>().target = target;
+            go.GetComponent<BulletController>().damage = damage;
 
-            target.GetComponent<EnemyController>().GetDamage(damage);
             reloadProgress = 0;
         }
     }

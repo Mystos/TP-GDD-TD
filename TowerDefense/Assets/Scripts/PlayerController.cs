@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,19 +20,27 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 vec = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             gameController.grid.GetXY(vec, out int x, out int y);
             Debug.Log(x + ":" + y);
 
-            // Le joueur achete une tourelle et la place
-            if(turretController.price <= gold)
+            TileBase tileClicked = gameController.tilemap.GetTile(gameController.tilemap.WorldToCell(new Vector3(x, y, 0)));
+
+            if(tileClicked.name != "road")
             {
-                GameObject go = Instantiate(prefabSelectedTurret.gameObject);
-                go.transform.position = new Vector3(x + .5f, y + .5f, 0);
-                gold -= turretController.price;
+                // Le joueur achete une tourelle et la place
+                if (turretController.price <= gold)
+                {
+                    GameObject go = Instantiate(prefabSelectedTurret.gameObject);
+                    go.transform.position = new Vector3(x + .5f, y + .5f, 0);
+                    gold -= turretController.price;
+                }
             }
+
+
         }
 
 

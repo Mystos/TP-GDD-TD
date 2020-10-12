@@ -100,6 +100,9 @@ MonoBehaviour:
   waypointsContainer: {fileID: 0}
   waypoints: []
   currentWaypoint: {fileID: 0}
+  endPoint: {fileID: 0}
+  gameManager: {fileID: 0}
+  moveSpeed: 538
 --- !u!58 &2380567102092385222
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -152,3 +155,5 @@ MonoBehaviour:
   maxHealth: 100
   currentHealth: 100
   lootGold: 100
+  player: {fileID: 0}
+  moveSpeed: 1
