@@ -5,22 +5,45 @@ using UnityEngine;
 
 public class TurretController : MonoBehaviour
 {
+
+    public TurretType type;
     public GameObject target;
     public GameObject bullet;
-    public float radius;
-    public int damage;
+    public float radiusLvl1;
+    public float radiusLvl2;
+    public float radiusLvl3;
+    internal int damage;
+    public int damageLvl1;
+    public int damageLvl2;
+    public int damageLvl3;
+
     private CircleCollider2D collider;
     public GameObject turret;
     public GameObject tower;
+    public Sprite towerLvl1;
+    public Sprite towerLvl2;
+    public Sprite towerLvl3;
+    public Sprite turretLvl1;
+    public Sprite turretLvl2;
+    public Sprite turretLvl3;
+    internal int level = 0;
+
     public float fireRate = 2f;
     public float reloadProgress = 0f;
-    public int price = 0;
+    internal int price = 0;
+    public int upgradePriceLvl1 = 0;
+    public int upgradePriceLvl2 = 0;
+    public int upgradePriceLvl3 = 0;
+
+
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         collider = this.GetComponent<CircleCollider2D>();
-        collider.radius = radius;
+        LevelUp();
     }
 
     // Update is called once per frame
@@ -41,6 +64,41 @@ public class TurretController : MonoBehaviour
         float rot_z = Mathf.Atan2(dir.normalized.y, dir.normalized.x) * Mathf.Rad2Deg;
         Vector3 rotation = Quaternion.Lerp(turret.transform.rotation, Quaternion.Euler(0f, 0f, rot_z - 90), Time.deltaTime * 5).eulerAngles;
         turret.transform.rotation = Quaternion.Euler(0f, 0f, rotation.z);
+    }
+
+    internal void LevelUp()
+    {
+        level++;
+        Debug.Log("levelUp : " + level);
+
+        SpriteRenderer spriteTurret = turret.GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteTower = tower.GetComponent<SpriteRenderer>();
+
+        switch (level)
+        {
+            case 1:
+                spriteTurret.sprite = turretLvl1;
+                spriteTower.sprite = towerLvl1;
+                collider.radius = radiusLvl1;
+                damage = damageLvl1;
+                price = upgradePriceLvl2;
+                break;
+            case 2:
+                spriteTurret.sprite = turretLvl2;
+                spriteTower.sprite = towerLvl2;
+                collider.radius = radiusLvl2;
+                damage = damageLvl2;
+                price = upgradePriceLvl3;
+
+                break;
+            case 3:
+                spriteTurret.sprite = turretLvl3;
+                spriteTower.sprite = towerLvl3;
+                collider.radius = radiusLvl3;
+                damage = damageLvl3;
+                break;
+        }
+
     }
 
     private void FireTarget()
@@ -73,5 +131,12 @@ public class TurretController : MonoBehaviour
                 target = collision.gameObject;
             }
         }
+    }
+
+    public enum TurretType
+    {
+        CanonBaguette,
+        LanceurViennoiserie,
+        Verseur
     }
 }

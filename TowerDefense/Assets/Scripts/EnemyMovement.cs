@@ -33,14 +33,15 @@ public class EnemyMovement : MonoBehaviour
         {
             if (!transform.position.Equals(currentWaypoint.transform.position))
             {
-                transform.position = Vector2.MoveTowards(transform.position, currentWaypoint.transform.position, Time.deltaTime + moveSpeed);
+                transform.position = Vector2.MoveTowards(transform.position, currentWaypoint.transform.position, Time.deltaTime * moveSpeed);
             }
             else
             {
                 GetNextWaypoint();
                 if (currentWaypoint.name == "EndPoint" && transform.position.Equals(currentWaypoint.transform.position))
                 {
-                    gameManager.GetComponent<GridTest>().pdvChateau -= 1;
+                    gameManager.GetComponent<GameController>().pdvChateau -= 1;
+
                     GameObject.Destroy(this.gameObject);
                 }
             }

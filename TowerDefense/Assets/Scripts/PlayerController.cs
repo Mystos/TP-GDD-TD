@@ -5,16 +5,14 @@ using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
-    public GridTest gameController;
+    public GameController gameController;
     public GameObject prefabSelectedTurret;
-    private TurretController turretController;
 
     public int gold = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        turretController = prefabSelectedTurret.GetComponent<TurretController>();
     }
 
     // Update is called once per frame
@@ -28,21 +26,50 @@ public class PlayerController : MonoBehaviour
             Debug.Log(x + ":" + y);
 
             TileBase tileClicked = gameController.tilemap.GetTile(gameController.tilemap.WorldToCell(new Vector3(x, y, 0)));
+            Debug.Log(tileClicked.name);
 
-            if(tileClicked.name != "road")
+            bool isThereATurret = false;
+
+            TurretController turretController = null;
+
+            foreach(TurretController item in gameController.listTurret)
             {
-                // Le joueur achete une tourelle et la place
+                if (item.gameObject.transform.position == new Vector3(x + .5f, y + .5f, 0))
+                {
+                    isThereATurret = true;
+                    turretController = item;
+                    break;
+                }
+            }
+
+            if (!isThereATurret)
+            {
+                // on en invoque une
+                if (tileClicked.name != "road")
+                {
+                    // Le joueur achete une tourelle et la place
+                    if (prefabSelectedTurret.GetComponent<TurretController>().upgradePriceLvl1 <= gold)
+                    {
+                        GameObject go = Instantiate(prefabSelectedTurret.gameObject);
+                        go.transform.position = new Vector3(x + .5f, y + .5f, 0);
+                        gold -= go.GetComponent<TurretController>().upgradePriceLvl1;
+                        gameController.listTurret.Add(go.GetComponent<TurretController>());
+                    }
+                }
+            }
+            else
+            {
+                // Il y a deja une tourelle donc on l'ameliore
                 if (turretController.price <= gold)
                 {
-                    GameObject go = Instantiate(prefabSelectedTurret.gameObject);
-                    go.transform.position = new Vector3(x + .5f, y + .5f, 0);
                     gold -= turretController.price;
+                    turretController.LevelUp();
+
                 }
             }
 
 
+
         }
-
-
     }
 }
