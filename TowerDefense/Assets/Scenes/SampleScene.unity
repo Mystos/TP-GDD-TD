@@ -253,6 +253,10 @@ MonoBehaviour:
   gameController: {fileID: 1786754265}
   prefabSelectedTurret: {fileID: 6627450798974735511, guid: 04d3642a12ea2e7438bf45a701f88d21,
     type: 3}
+  prefabTurretCanon: {fileID: 6627450798974735511, guid: 04d3642a12ea2e7438bf45a701f88d21,
+    type: 3}
+  prefabTurretLanceur: {fileID: 8321921075594043005, guid: 482d46d6af34e254e8c19513e1906d71,
+    type: 3}
   gold: 100
 --- !u!4 &122543413
 Transform:

@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     public GameController gameController;
     public GameObject prefabSelectedTurret;
+    public GameObject prefabTurretCanon;
+    public GameObject prefabTurretLanceur;
+
 
     public int gold = 0;
 
@@ -18,6 +21,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            prefabSelectedTurret = prefabTurretCanon;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            prefabSelectedTurret = prefabTurretLanceur;
+        }
+
 
         if (Input.GetMouseButtonDown(0))
         {

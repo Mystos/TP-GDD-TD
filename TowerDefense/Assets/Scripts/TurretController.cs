@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEditor.Timeline;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class TurretController : MonoBehaviour
 {
 
     public TurretType type;
-    public GameObject target;
+    public List<GameObject> target;
     public GameObject bullet;
     public float radiusLvl1;
     public float radiusLvl2;
@@ -43,13 +44,14 @@ public class TurretController : MonoBehaviour
     void Start()
     {
         collider = this.GetComponent<CircleCollider2D>();
+        target = new List<GameObject>();
         LevelUp();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(target != null)
+        if(target != null && target.Count > 0)
         {
             FollowTarget();
             FireTarget();
@@ -58,7 +60,7 @@ public class TurretController : MonoBehaviour
 
     private void FollowTarget()
     {
-        Vector3 dir = target.transform.position - turret.transform.position;
+        Vector3 dir = target[0].transform.position - turret.transform.position;
         dir.Normalize();
 
         float rot_z = Mathf.Atan2(dir.normalized.y, dir.normalized.x) * Mathf.Rad2Deg;
@@ -106,31 +108,58 @@ public class TurretController : MonoBehaviour
         reloadProgress += Time.deltaTime;
         if (reloadProgress >= fireRate)
         {
-            GameObject go = Instantiate(bullet);
-            go.transform.position = this.transform.position;
-            go.GetComponent<BulletController>().target = target;
-            go.GetComponent<BulletController>().damage = damage;
+            if(type == TurretType.LanceurViennoiserie)
+            {
+                foreach (GameObject targ in target)
+                {
+                    GameObject go = Instantiate(bullet);
+                    go.transform.position = this.transform.position;
+                    go.GetComponent<BulletController>().target = targ;
+                    go.GetComponent<BulletController>().damage = damage;
+                }
+            }
+            else
+            {
+                    GameObject go = Instantiate(bullet);
+                    go.transform.position = this.transform.position;
+                    go.GetComponent<BulletController>().target = target[0];
+                    go.GetComponent<BulletController>().damage = damage;
+                
+            }
+
+
 
             reloadProgress = 0;
         }
     }
 
+    void OnTriggerExit(Collider other)
+    {
+        // Destroy everything that leaves the trigger
+        target.Remove(other.gameObject);
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (target == null)
+        if (target.Count <= 0)
         {
-            target = collision.gameObject;
+            target.Add(collision.gameObject);
         }
         else
         {
             float distance = (collision.gameObject.transform.position - this.transform.position).magnitude;
-            float distanceTarget = (target.transform.position - this.transform.position).magnitude;
+            float distanceTarget = (target[0].transform.position - this.transform.position).magnitude;
 
             if (distance < distanceTarget)
             {
-                target = collision.gameObject;
+                target.Insert(0, collision.gameObject);
+            }
+            else
+            {
+                target.Add(collision.gameObject);
             }
         }
+
     }
 
     public enum TurretType
